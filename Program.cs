@@ -58,6 +58,8 @@ class ConsoleApplication
 		var state = new[] {
 			KeyValuePair.Create<string, object>("state-key-1", "state-value-1"),
 			KeyValuePair.Create<string, object>("state-key-2", 2),
+			KeyValuePair.Create<string, object>("state-key-3, other-thing-here", "state-value-3, [something here] [and here"),
+			KeyValuePair.Create<string, object>("state-key-3", "other-thing-here, state-value-3, [something here] [and here"),
 		};
 
 		var sprops = new[] {
@@ -74,7 +76,11 @@ class ConsoleApplication
 		using (var _ = _logger.BeginScope("a - {a}, b - {b}", "a", 19)) {
 			_logger.Log(LogLevel.Error, new EventId(12, "twelve"), state, null, (state, ex) => "This message came from _logger.Log(...); it has no formatted values.");
 		}
-		
+
+		using (var _ = _logger.BeginScope(sprops)) {
+			_logger.Log(LogLevel.Error, new EventId(13, "thirteen"), "absolute basic log message with no formatted values {state}", state);
+		}
+
 		return Task.FromResult(0);
 	}
 }
